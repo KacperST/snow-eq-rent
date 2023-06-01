@@ -2,122 +2,162 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using RentMVCApp.Data;
 using RentMVCApp.Models;
 
 namespace RentMVCApp.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ItemController : ControllerBase
+    public class ItemController : Controller
     {
-        private readonly ContextDb _context;
+        private readonly ItemContext _context;
 
-        public ItemController(ContextDb context)
+        public ItemController(ItemContext context)
         {
             _context = context;
         }
 
-        // GET: api/Item
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        // GET: Item
+        public async Task<IActionResult> Index()
         {
-          if (_context.Items == null)
-          {
-              return NotFound();
-          }
-            return await _context.Items.ToListAsync();
+              return _context.Item != null ? 
+                          View(await _context.Item.ToListAsync()) :
+                          Problem("Entity set 'ItemContext.Item'  is null.");
         }
 
-        // GET: api/Item/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Item>> GetItem(int id)
+        // GET: Item/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
-          if (_context.Items == null)
-          {
-              return NotFound();
-          }
-            var item = await _context.Items.FindAsync(id);
+            if (id == null || _context.Item == null)
+            {
+                return NotFound();
+            }
 
+            var item = await _context.Item
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (item == null)
             {
                 return NotFound();
             }
 
-            return item;
+            return View(item);
         }
 
-        // PUT: api/Item/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutItem(int id, Item item)
+        // GET: Item/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Item/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("ID,price,type,availability,description")] Item item)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(item);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(item);
+        }
+
+        // GET: Item/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null || _context.Item == null)
+            {
+                return NotFound();
+            }
+
+            var item = await _context.Item.FindAsync(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return View(item);
+        }
+
+        // POST: Item/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ID,price,type,availability,description")] Item item)
         {
             if (id != item.ID)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(item).State = EntityState.Modified;
-
-            try
+            if (ModelState.IsValid)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ItemExists(id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(item);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!ItemExists(item.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+                return RedirectToAction(nameof(Index));
             }
-
-            return NoContent();
+            return View(item);
         }
 
-        // POST: api/Item
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Item>> PostItem(Item item)
+        // GET: Item/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
-          if (_context.Items == null)
-          {
-              return Problem("Entity set 'ContextDb.Items'  is null.");
-          }
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetItem", new { id = item.ID }, item);
-        }
-
-        // DELETE: api/Item/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
-        {
-            if (_context.Items == null)
+            if (id == null || _context.Item == null)
             {
                 return NotFound();
             }
-            var item = await _context.Items.FindAsync(id);
+
+            var item = await _context.Item
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Items.Remove(item);
-            await _context.SaveChangesAsync();
+            return View(item);
+        }
 
-            return NoContent();
+        // POST: Item/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Item == null)
+            {
+                return Problem("Entity set 'ItemContext.Item'  is null.");
+            }
+            var item = await _context.Item.FindAsync(id);
+            if (item != null)
+            {
+                _context.Item.Remove(item);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool ItemExists(int id)
         {
-            return (_context.Items?.Any(e => e.ID == id)).GetValueOrDefault();
+          return (_context.Item?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }

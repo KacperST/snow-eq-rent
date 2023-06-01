@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RentMVCApp.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<ItemContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("ItemContext") ?? throw new InvalidOperationException("Connection string 'ItemContext' not found.")));
 builder.Services.AddDbContext<ContextDb>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ContextDb") ?? throw new InvalidOperationException("Connection string 'ContextDb' not found.")));
 
