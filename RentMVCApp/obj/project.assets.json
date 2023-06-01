@@ -11340,20 +11340,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\janek\\.nuget\\packages\\": {}
+    "/home/kacper/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\janek\\Desktop\\C#\\Laby\\Projekt\\snow-eq-rent\\RentMVCApp\\RentMVCApp.csproj",
+      "projectUniqueName": "/home/kacper/ProgramowanieZaawansowane2/lab11/snow-eq-rent/RentMVCApp/RentMVCApp.csproj",
       "projectName": "RentMVCApp",
-      "projectPath": "C:\\Users\\janek\\Desktop\\C#\\Laby\\Projekt\\snow-eq-rent\\RentMVCApp\\RentMVCApp.csproj",
-      "packagesPath": "C:\\Users\\janek\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\janek\\Desktop\\C#\\Laby\\Projekt\\snow-eq-rent\\RentMVCApp\\obj\\",
+      "projectPath": "/home/kacper/ProgramowanieZaawansowane2/lab11/snow-eq-rent/RentMVCApp/RentMVCApp.csproj",
+      "packagesPath": "/home/kacper/.nuget/packages/",
+      "outputPath": "/home/kacper/ProgramowanieZaawansowane2/lab11/snow-eq-rent/RentMVCApp/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\janek\\Desktop\\C#\\Laby\\Projekt\\snow-eq-rent\\RentMVCApp\\NuGet.Config",
-        "C:\\Users\\janek\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/kacper/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -11425,7 +11424,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.203/RuntimeIdentifierGraph.json"
       }
     }
   }
